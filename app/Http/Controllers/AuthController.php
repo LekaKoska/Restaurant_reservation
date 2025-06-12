@@ -23,7 +23,7 @@ class AuthController extends Controller
             ]);
 
             return response()->json([
-                "status" => true,
+                "success" => true,
                 "message" => "Registered successfully",
                 "data" => [
                     "id" => $user->id,
@@ -42,7 +42,7 @@ class AuthController extends Controller
         if(!Auth::attempt($credentials))
         {
             return response()->json([
-                'status' => false,
+                'success' => false,
                 'message' => "Invalid credentials"
             ], 401);
         }
@@ -50,7 +50,7 @@ class AuthController extends Controller
         $token = $user->createToken('Api Token of ' . $user->name)->plainTextToken;
 
         return response()->json([
-            "status" => true,
+            "success" => true,
             "message" => "Login successfully",
             "data" => [
                 "id" => $user->id,
@@ -65,7 +65,7 @@ class AuthController extends Controller
         Auth::user()->currentAccessToken()->delete();
 
         return response()->json([
-            "status" => true,
+            "success" => true,
             "message" => "Logged out successfully and token has been deleted"
         ]);
     }
