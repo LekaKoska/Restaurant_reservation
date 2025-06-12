@@ -46,8 +46,8 @@ class AuthController extends Controller
                 'message' => "Invalid credentials"
             ], 401);
         }
-        $user = Auth::user();
-        $token = $user->createToken('Api Token')->plainTextToken;
+        $user = User::where("email", $request->email)->first();
+        $token = $user->createToken('Api Token of ' . $user->name)->plainTextToken;
 
         return response()->json([
             "status" => true,
@@ -59,5 +59,14 @@ class AuthController extends Controller
             "token" => $token
         ], 200);
 
+    }
+    public function logout()
+    {
+        Auth::user()->currentAccessToken()->delete();
+
+        return response()->json([
+            "status" => true,
+            "message" => "Logged out successfully and token has been deleted"
+        ]);
     }
 }
