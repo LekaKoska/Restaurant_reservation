@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\ReservationController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -18,3 +19,4 @@ Route::prefix("/auth")->controller(AuthController::class)->group( function ()
 });
 
 
+Route::post("/table", [ReservationController::class, "index"])->middleware("auth:sanctum");
