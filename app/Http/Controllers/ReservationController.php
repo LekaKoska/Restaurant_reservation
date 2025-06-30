@@ -33,8 +33,10 @@ class ReservationController extends Controller
        $tableReservation = TablesModel::create([
             "user_id" => $user->id,
             "guest_number" => $request->get("guest_number"),
-            "location" => $request->get("location")
+            "table_number" => $request->get("table_number")
         ]);
+
+
 
         return response()->json([
             "status" => true,

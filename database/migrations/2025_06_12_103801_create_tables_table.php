@@ -15,7 +15,11 @@ return new class extends Migration
             $table->id();
             $table->integer("guest_number");
             $table->string("status")->default("available");
-            $table->string("location");
+            $table->unsignedInteger("table_number");
+            $table->unsignedBigInteger("user_id");
+            $table->foreign("user_id")
+                ->references("id")
+                ->on("users");
             $table->timestamps();
         });
     }
