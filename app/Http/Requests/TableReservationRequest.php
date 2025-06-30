@@ -22,8 +22,8 @@ class TableReservationRequest extends FormRequest
     public function rules(): array
     {
         return [
-            "guest_number" => "required|min:1|max:9",
-            "location" => "required"
+            "guest_number" => "required|integer|min:1|max:9",
+            "table_number" => "required|integer|min:1|max:23"
         ];
     }
 }
