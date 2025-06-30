@@ -20,3 +20,5 @@ Route::prefix("/auth")->controller(AuthController::class)->group( function ()
 
 
 Route::post("/table", [ReservationController::class, "index"])->middleware("auth:sanctum");
+
+Route::get("/allTables", [ReservationController::class, "info"]);

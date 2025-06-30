@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\TableReservationRequest;
+use App\Models\TablesInfoListModel;
 use App\Models\TablesModel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -44,5 +45,15 @@ class ReservationController extends Controller
         ]);
 
 
+    }
+
+    public function info()
+    {
+        $tables = TablesInfoListModel::all();
+        return response()->json(
+            [
+                "status" => true,
+                "data" => $tables
+            ], 200);
     }
 }
