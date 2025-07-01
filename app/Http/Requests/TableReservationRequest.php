@@ -23,7 +23,7 @@ class TableReservationRequest extends FormRequest
     {
         return [
             "guest_number" => "required|integer|min:1|max:9",
-            "table_number" => "required|integer|min:1|max:23"
+            "table_id" => "required|integer|min:1|max:23|exists:tables_info_list,id"
         ];
     }
 }
