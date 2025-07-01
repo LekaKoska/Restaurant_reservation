@@ -8,5 +8,7 @@ class TablesModel extends Model
 {
     protected $table = "tables";
 
-    protected $fillable = ["guest_number", "status", "table_number", "user_id"];
+    protected $fillable = ["guest_number",  "table_id", "user_id"];
+
+
 }
