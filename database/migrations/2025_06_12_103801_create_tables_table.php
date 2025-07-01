@@ -14,8 +14,10 @@ return new class extends Migration
         Schema::create('tables', function (Blueprint $table) {
             $table->id();
             $table->integer("guest_number");
-            $table->string("status")->default("available");
-            $table->unsignedInteger("table_number");
+            $table->unsignedBigInteger("table_id");
+            $table->foreign("table_id")
+                ->references("id")
+                ->on("tables_info_list");
             $table->unsignedBigInteger("user_id");
             $table->foreign("user_id")
                 ->references("id")
