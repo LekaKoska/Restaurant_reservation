@@ -48,4 +48,9 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    public function reservedTable()
+    {
+        return $this->hasOne(TablesInfoListModel::class);
+    }
 }
