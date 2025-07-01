@@ -10,4 +10,11 @@ class TablesInfoListModel extends Model
     protected $hidden = ['id', 'created_at', 'updated_at'];
     protected $fillable = ['table_num', "location", "status"];
     const LOCATION = ['north', 'east', 'west', 'south'];
+
+    const STATUS_TAKEN = "taken";
+
+    public function listOfTables()
+    {
+        return $this->hasMany(TablesModel::class);
+    }
 }
