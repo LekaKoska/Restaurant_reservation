@@ -5,12 +5,23 @@ namespace App\Http\Controllers;
 use App\Http\Requests\TableReservationRequest;
 use App\Models\TablesInfoListModel;
 use App\Models\TablesModel;
+use App\Repository\TableInfoRepostory;
+use App\Repository\UserReservationRepository;
 use http\Env\Response;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class ReservationController extends Controller
 {
+    private $userReservationRepo;
+    private $tableInfoRepo;
+
+
+    public function __construct()
+    {
+        $this->userReservationRepo = new UserReservationRepository();
+        $this->tableInfoRepo = new TableInfoRepostory();
+    }
     public function index(TableReservationRequest $request)
     {
         $user = Auth::user();
@@ -23,7 +34,7 @@ class ReservationController extends Controller
                     "message" => "Only auth user's have permission to be there"
                 ], 401);
         }
-       $userExist = TablesModel::firstWhere("user_id", $user->id);
+       $userExist = $this->userReservationRepo->findUserReservation($user);
 
         if($userExist)
         {
@@ -33,7 +44,7 @@ class ReservationController extends Controller
             ], 403);
         }
 
-        $table = TablesInfoListModel::find($request->get('table_id'));
+        $table = $this->tableInfoRepo->checkStatus($request);
 
         if ($table->status === TablesInfoListModel::STATUS_TAKEN) {
 
@@ -44,11 +55,7 @@ class ReservationController extends Controller
         }
 
 
-       $tableReservation = TablesModel::create([
-            "user_id" => $user->id,
-            "guest_number" => $request->get("guest_number"),
-            "table_id" => $request->get("table_id")
-        ]);
+       $tableReservation = $this->userReservationRepo->creatingReservation($user, $request);
 
         $table->status = TablesInfoListModel::STATUS_TAKEN;
         $table->save();
