@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\ApiResponse;
 use App\Http\Requests\TableReservationRequest;
 use App\Models\TablesInfoListModel;
 use App\Repository\TableInfoRepostory;
@@ -21,34 +22,27 @@ class ReservationController extends Controller
 
         if($userExist)
         {
-            return response()->json([
-                "status" => false,
-                "message" => "You already have reservation"
-            ], 403);
+            return ApiResponse::errorResponse(message: "You already have reservation");
+
         }
 
         $table = $this->tableInfoRepo->checkStatus($request);
 
         if ($table->status === TablesInfoListModel::STATUS_TAKEN) {
 
-            return response()->json([
-                "status" => false,
-                "message" => "This table is already taken!"
-            ], 403);
+            return ApiResponse::errorResponse(message: "This table is already taken!");
+
         }
 
 
-       $tableReservation = $this->userReservationRepo->creatingReservation($user, $request);
+        $tableReservation = $this->userReservationRepo->creatingReservation($user, $request);
 
         $table->status = TablesInfoListModel::STATUS_TAKEN;
         $table->save();
 
 
 
-        return response()->json([
-            "status" => true,
-            "data" => $tableReservation
-        ]);
+        return ApiResponse::successResponse(message: "Your reservation has been created!", data: $tableReservation);
 
 
     }
@@ -67,11 +61,8 @@ class ReservationController extends Controller
                     ];
 
         }
-        return response()->json(
-            [
-                "status" => true,
-                "data" => $data
-            ], 200);
+        return ApiResponse::successResponse(data: $data);
+
 
 
 

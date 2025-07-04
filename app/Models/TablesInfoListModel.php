@@ -13,8 +13,5 @@ class TablesInfoListModel extends Model
 
     const STATUS_TAKEN = "taken";
 
-    public function listOfTables()
-    {
-        return $this->hasMany(TablesModel::class);
-    }
+
 }
