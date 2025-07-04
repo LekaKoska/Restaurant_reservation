@@ -4,36 +4,19 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\TableReservationRequest;
 use App\Models\TablesInfoListModel;
-use App\Models\TablesModel;
 use App\Repository\TableInfoRepostory;
 use App\Repository\UserReservationRepository;
-use http\Env\Response;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class ReservationController extends Controller
 {
-    private $userReservationRepo;
-    private $tableInfoRepo;
 
-
-    public function __construct()
-    {
-        $this->userReservationRepo = new UserReservationRepository();
-        $this->tableInfoRepo = new TableInfoRepostory();
-    }
+    public function __construct(protected UserReservationRepository $userReservationRepo, protected TableInfoRepostory $tableInfoRepo)
+    {}
     public function index(TableReservationRequest $request)
     {
         $user = Auth::user();
 
-        if(!$user)
-        {
-            return response()->json(
-                [
-                    "status" => false,
-                    "message" => "Only auth user's have permission to be there"
-                ], 401);
-        }
        $userExist = $this->userReservationRepo->findUserReservation($user);
 
         if($userExist)
@@ -73,7 +56,7 @@ class ReservationController extends Controller
     public function info()
     {
 
-        $tables = TablesInfoListModel::all();
+        $tables = $this->tableInfoRepo->allTablesInfo();
         $data = [];
         foreach ($tables as $table)
         {

@@ -5,12 +5,10 @@ use App\Models\TablesModel;
 
 class UserReservationRepository
 {
-    private $tablesModel;
 
-    public function  __construct()
-    {
-        $this->tablesModel = new TablesModel();
-    }
+
+    public function  __construct(protected TablesModel $tablesModel)
+    {}
 
     public function findUserReservation($user)
     {
