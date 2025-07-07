@@ -1,19 +1,21 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Auth;
 
+use App\Http\Controllers\Controller;
 use App\Http\Requests\LoginRequest;
 use App\Http\Requests\RegisterRequest;
 use App\Models\User;
-use Dotenv\Exception\ValidationException;
+use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\URL;
 
 class AuthController extends Controller
 {
-    public function register(RegisterRequest $request)
+    public function register(RegisterRequest $request): JsonResponse
     {
 
            $user = User::create([
@@ -22,20 +24,31 @@ class AuthController extends Controller
                 "password" => Hash::make($request->get("password")),
             ]);
 
+                event(new Registered($user));
+
+            $verifyUrl = URL::temporarySignedRoute(
+                "verification.verify",
+                Carbon::now()->addMinute(60),
+                ["id" => $user->id, "hash" => sha1($user->email)]
+                );
+        $token = $user->createToken('Api token of ' . $user->name)->plainTextToken;
+
             return response()->json([
                 "success" => true,
                 "message" => "Registered successfully",
+                "verification_link" => $verifyUrl,
                 "data" => [
                     "id" => $user->id,
                     "name" => $user->name,
                     "email" => $user->email
-                ]
+                ],
+                "token" => $token
             ], 201);
 
 
     }
 
-    public function login(LoginRequest $request)
+    public function login(LoginRequest $request): JsonResponse
     {
         $credentials = $request->only("email", "password");
 
@@ -47,7 +60,7 @@ class AuthController extends Controller
             ], 401);
         }
         $user = User::where("email", $request->email)->first();
-        $token = $user->createToken('Api token of ' . $user->name)->plainTextToken;
+
 
         return response()->json([
             "success" => true,
@@ -55,12 +68,12 @@ class AuthController extends Controller
             "data" => [
                 "id" => $user->id,
                 "email" => $user->email,
-            ],
-            "token" => $token
+            ]
+
         ], 200);
 
     }
-    public function logout()
+    public function logout(): JsonResponse
     {
         Auth::user()->currentAccessToken()->delete();
 
