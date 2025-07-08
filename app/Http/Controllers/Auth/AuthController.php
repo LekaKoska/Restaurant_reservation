@@ -2,48 +2,33 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Helpers\ApiResponse;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\LoginRequest;
 use App\Http\Requests\RegisterRequest;
 use App\Models\User;
+use App\Repository\AuthRepository;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\URL;
 
 class AuthController extends Controller
 {
+    public function __construct(protected AuthRepository $authUserRepo)
+    {}
     public function register(RegisterRequest $request): JsonResponse
     {
 
-           $user = User::create([
-                "name" => $request->get("name"),
-                "email" => $request->get("email"),
-                "password" => Hash::make($request->get("password")),
-            ]);
+           $user = $this->authUserRepo->register($request);
 
                 event(new Registered($user));
 
-            $verifyUrl = URL::temporarySignedRoute(
-                "verification.verify",
-                Carbon::now()->addMinute(60),
-                ["id" => $user->id, "hash" => sha1($user->email)]
-                );
-        $token = $user->createToken('Api token of ' . $user->name)->plainTextToken;
+            $verifyUrl = $this->authUserRepo->url($user);
 
-            return response()->json([
-                "success" => true,
-                "message" => "Registered successfully",
-                "verification_link" => $verifyUrl,
-                "data" => [
-                    "id" => $user->id,
-                    "name" => $user->name,
-                    "email" => $user->email
-                ],
-                "token" => $token
-            ], 201);
+            $token = $user->createToken('Api token of ' . $user->name)->plainTextToken;
+
+           return ApiResponse::authSuccess(message: "Registered successfully", data: $user, verificationLink: $verifyUrl, token: $token);
+
 
 
     }
@@ -54,35 +39,23 @@ class AuthController extends Controller
 
         if(!Auth::attempt($credentials))
         {
-            return response()->json([
-                'success' => false,
-                'message' => "Invalid credentials"
-            ], 401);
+           return ApiResponse::errorResponse(message: "Invalid credentials");
+
         }
         $user = User::where("email", $request->email)->first();
 
 
         $token = $user->createToken('Api token of ' . $user->name)->plainTextToken;
 
-        return response()->json([
-            "success" => true,
-            "message" => "Login successfully",
-            "token" => $token,
-            "data" => [
-                "id" => $user->id,
-                "email" => $user->email,
-            ],
+       return ApiResponse::authSuccess(message: "Login successfully", data: $user, token: $token);
 
-        ], 200);
 
     }
     public function logout(): JsonResponse
     {
         Auth::user()->currentAccessToken()->delete();
 
-        return response()->json([
-            "success" => true,
-            "message" => "Logged out successfully and token has been deleted"
-        ]);
+        return ApiResponse::successResponse(message: "Logged out successfully and token has been deleted");
+
     }
 }

@@ -22,5 +22,16 @@ class ApiResponse
                 "message" => $message
             ], $code);
     }
+    public static function authSuccess($status = true, string $message = null, $data = null, string $verificationLink = null, string $token = null, int $code = 200): JsonResponse
+    {
+        return response()->json(
+            [
+                "status" => $status,
+                "message" => $message,
+                "data" => $data,
+                "verification_link" => $verificationLink,
+                "token" => $token
+            ], $code);
+    }
 
 }
