@@ -3,6 +3,7 @@
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Auth\VerifyEmailController;
 use App\Http\Controllers\ReservationController;
+use App\Http\Middleware\EnsureEmailVerified;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -29,7 +30,7 @@ Route::post('/email/verification-notification', function (Request $request) {
     return response()->json(['message' => 'Verification link sent!']);
 })->middleware(['auth:sanctum', 'throttle:6,1'])->name('verification.send');
 
-Route::post("/reservation", [ReservationController::class, "index"])->middleware("auth:sanctum", "verified");
+Route::post("/reservation", [ReservationController::class, "index"])->middleware("auth:sanctum", EnsureEmailVerified::class);
 
 Route::get("/tables", [ReservationController::class, "info"]);
 
