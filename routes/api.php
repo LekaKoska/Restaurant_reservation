@@ -30,7 +30,10 @@ Route::post('/email/verification-notification', function (Request $request) {
     return response()->json(['message' => 'Verification link sent!']);
 })->middleware(['auth:sanctum', 'throttle:6,1'])->name('verification.send');
 
-Route::post("/reservation", [ReservationController::class, "index"])->middleware("auth:sanctum", EnsureEmailVerified::class);
-
 Route::get("/tables", [ReservationController::class, "info"]);
+
+Route::post("/reservation", [ReservationController::class, "index"])->middleware("auth:sanctum", EnsureEmailVerified::class);
+Route::post("/reservation/time/{name}", [ReservationController::class, "time"])->middleware("auth:sanctum", EnsureEmailVerified::class)->name("time.reservation");
+
+
 
