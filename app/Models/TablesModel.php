@@ -10,5 +10,9 @@ class TablesModel extends Model
 
     protected $fillable = ["guest_number",  "table_id", "user_id"];
 
+    public function tableInfo()
+    {
+        return $this->hasOne(TablesInfoListModel::class, "id", "table_id");
+    }
 
 }

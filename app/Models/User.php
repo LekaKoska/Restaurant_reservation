@@ -51,6 +51,12 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function reservedTable()
     {
-        return $this->hasOne(TablesInfoListModel::class);
+        return $this->hasOne(TablesModel::class);
+    }
+
+
+    public function reservedTime()
+    {
+        return $this->hasOne(ReservationTimeModel::class);
     }
 }
