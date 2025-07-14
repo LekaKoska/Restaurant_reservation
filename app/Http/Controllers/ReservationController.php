@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Helpers\ApiResponse;
+use App\Facades\ResponseFacade;
 use App\Http\Requests\TableReservationRequest;
 use App\Http\Requests\TimeReservationRequest;
 use App\Mail\ReservationConfirmed;
@@ -28,7 +28,7 @@ class ReservationController extends Controller
 
         if($userExist)
         {
-            return ApiResponse::errorResponse(message: "You already have reservation");
+            return ResponseFacade::errorResponse(message: "You already have reservation");
 
         }
 
@@ -36,7 +36,7 @@ class ReservationController extends Controller
 
         if ($table->status === TablesInfoListModel::STATUS_TAKEN) {
 
-            return ApiResponse::errorResponse(message: "This table is already taken!");
+            return ResponseFacade::errorResponse(message: "This table is already taken!");
 
         }
 
@@ -48,7 +48,7 @@ class ReservationController extends Controller
 
 
 
-        return ApiResponse::successResponse(data: $tableReservation, message: "Your reservation was created, please set your time by clicking on $url");
+        return ResponseFacade::successResponse(data: $tableReservation, message: "Your reservation was created, please set your time by clicking on $url");
 
     }
 
@@ -67,7 +67,7 @@ class ReservationController extends Controller
                     ];
 
         }
-        return ApiResponse::successResponse(data: $data);
+        return ResponseFacade::successResponse(data: $data);
 
 
     }
@@ -78,12 +78,12 @@ class ReservationController extends Controller
 
         if (!$name->reservedTable)
         {
-            return ApiResponse::errorResponse(message: "You dont have reservation!");
+            return ResponseFacade::errorResponse(message: "You dont have reservation!");
         }
 
        if($name->reservedTime)
        {
-           return ApiResponse::errorResponse(message: "You have already set a time for your reservation!");
+           return ResponseFacade::errorResponse(message: "You have already set a time for your reservation!");
        }
 
         $time = ReservationTimeModel::create(
@@ -99,11 +99,8 @@ class ReservationController extends Controller
             'guest_number' => $name->reservedTable->guest_number,
             'reservation_date' => $time['reservation_date']]));
 
-        return response()->json([
-            "status" => true,
-            "data" => $time,
-            "message" => "Order accepted, check your mail for reservation info"
-        ], 201);
+            return ResponseFacade::successResponse(data: $time, message: "Order accepted, check your mail for reservation info");
+
 
 
     }
