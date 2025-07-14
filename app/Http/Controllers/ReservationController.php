@@ -9,6 +9,7 @@ use App\Mail\ReservationConfirmed;
 use App\Models\ReservationTimeModel;
 use App\Models\TablesInfoListModel;
 use App\Models\User;
+use App\Repository\ReservationTimeRepository;
 use App\Repository\TableInfoRepostory;
 use App\Repository\UserReservationRepository;
 use Illuminate\Http\JsonResponse;
@@ -18,7 +19,9 @@ use Illuminate\Support\Facades\Mail;
 class ReservationController extends Controller
 {
 
-    public function __construct(protected UserReservationRepository $userReservationRepo, protected TableInfoRepostory $tableInfoRepo)
+    public function __construct(protected UserReservationRepository $userReservationRepo,
+                                protected TableInfoRepostory $tableInfoRepo,
+                                protected ReservationTimeRepository $timeReservationRepo)
     {}
     public function index(TableReservationRequest $request): JsonResponse
     {
@@ -86,18 +89,10 @@ class ReservationController extends Controller
            return ResponseFacade::errorResponse(message: "You have already set a time for your reservation!");
        }
 
-        $time = ReservationTimeModel::create(
-            [
-                "user_id" => $name->id,
-                'table_id' => $name->reservedTable->table_id,
-                "reservation_date" => $request->get("reservation_date")
-            ]);
+        $time = $this->timeReservationRepo->addingTime($name, $request);
 
-            Mail::to($name->email)->send(new ReservationConfirmed([
-            'name' => $name->name,
-            'table_id' => $name->reservedTable->table_id,
-            'guest_number' => $name->reservedTable->guest_number,
-            'reservation_date' => $time['reservation_date']]));
+            $this->timeReservationRepo->mail($name, $time);
+
 
             return ResponseFacade::successResponse(data: $time, message: "Order accepted, check your mail for reservation info");
 
