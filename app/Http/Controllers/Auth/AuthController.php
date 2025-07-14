@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Facades\ResponseFacade;
 use App\Helpers\ApiResponse;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\LoginRequest;
@@ -27,7 +28,7 @@ class AuthController extends Controller
 
             $token = $user->createToken('Api token of ' . $user->name)->plainTextToken;
 
-           return ApiResponse::authSuccess(message: "Registered successfully", data: $user, verificationLink: $verifyUrl, token: $token);
+           return ResponseFacade::authSuccess(message: "Registered successfully", data: $user, verificationLink: $verifyUrl, token: $token);
 
 
 
@@ -39,7 +40,7 @@ class AuthController extends Controller
 
         if(!Auth::attempt($credentials))
         {
-           return ApiResponse::errorResponse(message: "Invalid credentials");
+           return ResponseFacade::errorResponse(message: "Invalid credentials");
 
         }
         $user = User::where("email", $request->email)->first();
@@ -47,7 +48,7 @@ class AuthController extends Controller
 
         $token = $user->createToken('Api token of ' . $user->name)->plainTextToken;
 
-       return ApiResponse::authSuccess(message: "Login successfully", data: $user, token: $token);
+       return ResponseFacade::authSuccess(message: "Login successfully", data: $user, token: $token);
 
 
     }
@@ -55,7 +56,7 @@ class AuthController extends Controller
     {
         Auth::user()->currentAccessToken()->delete();
 
-        return ApiResponse::successResponse(message: "Logged out successfully and token has been deleted");
+        return ResponseFacade::successResponse(message: "Logged out successfully and token has been deleted");
 
     }
 }
