@@ -1,7 +1,7 @@
 <x-mail::message>
-# Introduction
+#   Thank you
 
-   Thank you for reservation!
+    Your reservation has been accepted!
     Below this is your information about reservation:
 
     Table number: {{$data['table_id']}}
