@@ -2,19 +2,17 @@
 
 namespace App\Http\Controllers;
 
-use App\Facades\ResponseFacade;
+
 use App\Http\Requests\TableReservationRequest;
 use App\Http\Requests\TimeReservationRequest;
-use App\Mail\ReservationConfirmed;
-use App\Models\ReservationTimeModel;
 use App\Models\TablesInfoListModel;
 use App\Models\User;
 use App\Repository\ReservationTimeRepository;
 use App\Repository\TableInfoRepostory;
 use App\Repository\UserReservationRepository;
+use App\Services\ResponseServices;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Mail;
 
 class ReservationController extends Controller
 {
@@ -31,7 +29,7 @@ class ReservationController extends Controller
 
         if($userExist)
         {
-            return ResponseFacade::errorResponse(message: "You already have reservation");
+            return ResponseServices::errorResponse(message: "You already have reservation");
 
         }
 
@@ -39,7 +37,7 @@ class ReservationController extends Controller
 
         if ($table->status === TablesInfoListModel::STATUS_TAKEN) {
 
-            return ResponseFacade::errorResponse(message: "This table is already taken!");
+            return ResponseServices::errorResponse(message: "This table is already taken!");
 
         }
 
@@ -51,7 +49,7 @@ class ReservationController extends Controller
 
 
 
-        return ResponseFacade::successResponse(data: $tableReservation, message: "Your reservation was created, please set your time by clicking on $url");
+        return ResponseServices::successResponse(data: $tableReservation, message: "Your reservation was created, please set your time by clicking on $url");
 
     }
 
@@ -70,7 +68,7 @@ class ReservationController extends Controller
                     ];
 
         }
-        return ResponseFacade::successResponse(data: $data);
+        return ResponseServices::successResponse(data: $data);
 
 
     }
@@ -81,12 +79,12 @@ class ReservationController extends Controller
 
         if (!$name->reservedTable)
         {
-            return ResponseFacade::errorResponse(message: "You dont have reservation!");
+            return ResponseServices::errorResponse(message: "You dont have reservation!");
         }
 
        if($name->reservedTime)
        {
-           return ResponseFacade::errorResponse(message: "You have already set a time for your reservation!");
+           return ResponseServices::errorResponse(message: "You have already set a time for your reservation!");
        }
 
         $time = $this->timeReservationRepo->addingTime($name, $request);
@@ -94,7 +92,7 @@ class ReservationController extends Controller
             $this->timeReservationRepo->mail($name, $time);
 
 
-            return ResponseFacade::successResponse(data: $time, message: "Order accepted, check your mail for reservation info");
+            return ResponseServices::successResponse(data: $time, message: "Order accepted, check your mail for reservation info");
 
 
 
