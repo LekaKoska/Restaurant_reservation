@@ -32,8 +32,12 @@ Route::post('/email/verification-notification', function (Request $request) {
 
 Route::get("/tables", [ReservationController::class, "info"]);
 
-Route::post("/reservation", [ReservationController::class, "index"])->middleware("auth:sanctum", EnsureEmailVerified::class);
-Route::post("/reservation/time/{name}", [ReservationController::class, "time"])->middleware("auth:sanctum", EnsureEmailVerified::class)->name("time.reservation");
+Route::controller(ReservationController::class)->middleware("auth:sanctum", EnsureEmailVerified::class)->prefix("reservation")->group(function (){
+    Route::post("/","index");
+    Route::post("/time/{name}",  "time")->name("time.reservation");
+    Route::delete("delete/{id}", "delete")->name("delete.reservation");
+
+});
 
 
 
