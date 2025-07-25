@@ -12,6 +12,12 @@ class TablesInfoListModel extends Model
     const LOCATION = ['north', 'east', 'west', 'south'];
 
     const STATUS_TAKEN = "taken";
+    const STATUS_AVAILABLE = "available";
+
+    public function resInfo()
+    {
+        return $this->hasOne(TablesModel::class, "table_id", "id");
+    }
 
 
 }
