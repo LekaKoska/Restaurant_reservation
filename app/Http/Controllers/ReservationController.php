@@ -6,11 +6,13 @@ namespace App\Http\Controllers;
 use App\Http\Requests\TableReservationRequest;
 use App\Http\Requests\TimeReservationRequest;
 use App\Models\TablesInfoListModel;
+use App\Models\TablesModel;
 use App\Models\User;
 use App\Repository\ReservationTimeRepository;
 use App\Repository\TableInfoRepostory;
 use App\Repository\UserReservationRepository;
 use App\Services\ResponseServices;
+use http\Env\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
 
@@ -41,15 +43,19 @@ class ReservationController extends Controller
 
         }
 
-        $url = \url("api/reservation/time/{$user->id}");
+
         $tableReservation = $this->userReservationRepo->creatingReservation($user, $request);
+
+        $url = \url("api/reservation/time/{$user->id}");
+        $deleteUrl = \url("api/reservation/delete/{$table->resInfo->id}");
+
 
         $table->status = TablesInfoListModel::STATUS_TAKEN;
         $table->save();
 
 
 
-        return ResponseServices::successResponse(data: $tableReservation, message: "Your reservation was created, please set your time by clicking on $url");
+        return ResponseServices::successResponse(data: $tableReservation, message: "Your reservation was created, please set your time by clicking on $url, if you want to cancel your reservation please click on $deleteUrl");
 
     }
 
@@ -96,5 +102,22 @@ class ReservationController extends Controller
 
 
 
+    }
+
+    public function delete($id)
+    {
+
+        $reservationDelete = TablesModel::findOrFail($id); // If you pass matching id put it into $reservationDelete in opposite throw an error
+        if($reservationDelete->tableInfo)
+        {
+            $reservationDelete->tableInfo->status = TablesInfoListModel::STATUS_AVAILABLE;
+            $reservationDelete->tableInfo->save();
+
+        }
+
+        $reservationDelete->delete();
+
+
+        return ResponseServices::successResponse(message: "Your reservation has been canceled");
     }
 }
