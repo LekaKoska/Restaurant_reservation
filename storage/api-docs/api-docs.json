@@ -207,6 +207,95 @@
                 ]
             }
         },
+        "/api/email/verify/{id}/{hash}": {
+            "get": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Verify user email address",
+                "description": "Used to verify user's email. Requires valid signed URL with query parameters `expires` and `signature`.",
+                "operationId": "28405e7cec5bd7034f5ee5b3261b3cad",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "User ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "hash",
+                        "in": "path",
+                        "description": "Email verification hash (SHA1 of user's email)",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "expires",
+                        "in": "query",
+                        "description": "Expiration timestamp of signed URL",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 1753791260
+                        }
+                    },
+                    {
+                        "name": "signature",
+                        "in": "query",
+                        "description": "Signature used to verify the signed URL",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "example": "418f0fa..."
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Email verified successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Email successfully verified."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Invalid or expired signature",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Invalid signature"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
         "/api/reservation/": {
             "post": {
                 "tags": [
@@ -380,7 +469,7 @@
                 "tags": [
                     "Tables"
                 ],
-                "summary": "Deleting reservation by reservation ID",
+                "summary": "Deleting reservation by table ID",
                 "operationId": "b408164fc6e0509c8949ec02d11a7263",
                 "parameters": [
                     {
