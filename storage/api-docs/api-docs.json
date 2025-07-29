@@ -206,6 +206,218 @@
                     }
                 ]
             }
+        },
+        "/api/reservation/": {
+            "post": {
+                "tags": [
+                    "Tables"
+                ],
+                "summary": "Creating reservation",
+                "operationId": "b0d24b72c525e55de6f02d4483d5ea0b",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "guest_number",
+                                    "table_id"
+                                ],
+                                "properties": {
+                                    "guest_number": {
+                                        "type": "number",
+                                        "example": 1
+                                    },
+                                    "table_id": {
+                                        "type": "number",
+                                        "example": 4
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Reservation has been created",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Your reservation is created successfully"
+                                        },
+                                        "data": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "You already have reservation or table is taken",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "You already have reservation or this table is already taken"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/tables": {
+            "get": {
+                "tags": [
+                    "Tables"
+                ],
+                "summary": "Returns all tables",
+                "operationId": "76e742ed51294b972f9e168f7ad19d90",
+                "responses": {
+                    "200": {
+                        "description": "All tables with information"
+                    }
+                }
+            }
+        },
+        "/api/reservation/time/{name}": {
+            "post": {
+                "tags": [
+                    "Tables"
+                ],
+                "summary": "Adding time on reservation",
+                "operationId": "86e28dfe787676b9ae95ce1c428f7273",
+                "parameters": [
+                    {
+                        "name": "name",
+                        "in": "path",
+                        "description": "The ID of the user who has the reservation",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "reservation_date"
+                                ],
+                                "properties": {
+                                    "reservation_date": {
+                                        "type": "string",
+                                        "format": "date-time",
+                                        "example": "2025-07-08 15:00:00"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successfully added time",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Added time to your reservation"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Your reservation already has a set time or you don't have reservation!",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/reservation/delete/{id}": {
+            "delete": {
+                "tags": [
+                    "Tables"
+                ],
+                "summary": "Deleting reservation by reservation ID",
+                "operationId": "b408164fc6e0509c8949ec02d11a7263",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Deleting reservation for user who has reservation",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully deleted reservation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Your reservation has been deleted"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
         }
     },
     "components": {
@@ -221,6 +433,10 @@
         {
             "name": "Auth",
             "description": "Auth"
+        },
+        {
+            "name": "Tables",
+            "description": "Tables"
         }
     ]
 }

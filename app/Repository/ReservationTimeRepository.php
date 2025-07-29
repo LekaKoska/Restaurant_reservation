@@ -15,7 +15,7 @@ class ReservationTimeRepository
             [
                 "user_id" => $name->id,
                 'table_id' => $name->reservedTable->table_id,
-                "reservation_date" => $request->get("reservation_date")
+                "reservation_date" => $request->get("reservation_date"),
             ]);
     }
 
