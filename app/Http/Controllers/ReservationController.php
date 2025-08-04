@@ -90,7 +90,7 @@ class ReservationController extends Controller
 
 
 
-        return ResponseServices::successResponse(data: $tableReservation, message: "Your reservation was created, please set your time by clicking on $url, if you want to cancel your reservation please click on $deleteUrl");
+        return ResponseServices::successResponse(data: $tableReservation, message: "Your reservation was created, please set your time by clicking on $url, if you want to cancel your reservation please click on $deleteUrl", code: 201);
 
     }
 
@@ -112,7 +112,7 @@ class ReservationController extends Controller
     {
 
         $tables = $this->tableInfoRepo->allTablesInfo();
-        $tables->toArray();
+
 
         foreach ($tables as $table)
         {
@@ -217,7 +217,7 @@ class ReservationController extends Controller
      *    description="Successfully deleted reservation",
      *     @OA\JsonContent(
      *          @OA\Property(property="message", type="string", example="Your reservation has been deleted")
-     *          )  
+     *          )
      *      )
      * )
      */
