@@ -16,6 +16,7 @@ use http\Env\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
 use OpenApi\Annotations as OA;
+use Symfony\Component\HttpFoundation\Response;
 
 class ReservationController extends Controller
 {
@@ -123,7 +124,7 @@ class ReservationController extends Controller
                     ];
 
         }
-        return ResponseServices::successResponse(data: $data);
+        return ResponseServices::successResponse(data: $data, code: Response::HTTP_OK);
 
 
     }
