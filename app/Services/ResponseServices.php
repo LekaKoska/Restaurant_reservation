@@ -6,7 +6,7 @@ use Symfony\Component\HttpFoundation\Response;
 
 class ResponseServices
 {
-    public static function successResponse($status = true, string $message = null, $data = null, int $code = Response::HTTP_OK): JsonResponse
+    public static function successResponse($status = true, string $message = null, $data = null, int $code = Response::HTTP_CREATED): JsonResponse
     {
         return response()->json([
             "status" => $status,
