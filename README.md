@@ -1,8 +1,77 @@
-<div style="position: relative; width: 100%; height: 0; padding-top: 33.3333%;
- padding-bottom: 0; box-shadow: 0 2px 8px 0 rgba(63,69,81,0.16); margin-top: 1.6em; margin-bottom: 0.9em; overflow: hidden;
- border-radius: 8px; will-change: transform;">
-  <iframe loading="lazy" style="position: absolute; width: 100%; height: 100%; top: 0; left: 0; border: none; padding: 0;margin: 0;"
-    src="https://www.canva.com/design/DAGvNHw_KPA/m9gxXVPHxKNzoegxVdWg9A/view?embed" allowfullscreen="allowfullscreen" allow="fullscreen">
-  </iframe>
-</div>
-<a href="https:&#x2F;&#x2F;www.canva.com&#x2F;design&#x2F;DAGvNHw_KPA&#x2F;m9gxXVPHxKNzoegxVdWg9A&#x2F;view?utm_content=DAGvNHw_KPA&amp;utm_campaign=designshare&amp;utm_medium=embeds&amp;utm_source=link" target="_blank" rel="noopener">Restaurant Reservation</a> autora Alek Koska
+<h1 align="center">🍽️ Restaurant API Reservation</h1>
+<p align="center">
+  A RESTful API for restaurant table reservations
+</p>
+
+---
+
+## 📌 Project description
+
+This Laravel REST API  allows users (guests) to:
+- 📅 Reserve a table at the restaurant,
+- 🕒 Add a time to their reservation,
+- ❌ Cancel a reservation
+
+
+
+> ⚠️ Only registered and email-verified users can access reservation features.
+
+---
+
+## 🎯 Features
+
+✅ User registration and login
+
+📬 Email verification as a requirement for reservations
+
+🔐 Sanctum authentication via token
+
+🪑 Fetch available tables
+
+📝 Create and update reservations
+
+🔗 Generate URLs for canceling or updating reservation time
+
+📃 Swagger API documentation
+
+---
+
+## 🛠️ Technologies
+
+| Technology         | Version       |
+|--------------------|---------------|
+| Laravel            | 12.x          |
+| PHP                | 8.3           |
+| MySQL              | 8+            |
+| Laravel Sanctum    | ✅            |
+| L5 Swagger         | ✅            |
+
+---
+
+
+## 🔐 Authentication
+Laravel Sanctum is used for API authentication
+
+After logging in, the user receives a token which must be sent in the request header:
+
+Authorization: Bearer {token}
+
+# 📁 1. Clone the repository
+git clone https://github.com/your-username/Restaurant_api_reservation.git
+cd Restaurant_api_reservation
+
+# ⚙️ 2. Install dependencies
+composer install
+
+# 🔐 3. Create .env file
+cp .env.example .env
+
+# 🗄️ 4. Run migrations and seeders
+php artisan migrate --seed
+
+# 🔑 5. Generate application key
+php artisan key:generate
+
+# ▶️ 6. Start the server
+php artisan serve
+
