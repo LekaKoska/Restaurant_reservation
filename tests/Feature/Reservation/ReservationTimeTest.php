@@ -48,12 +48,7 @@ class ReservationTimeTest extends TestCase
 
         $user = User::factory()->create();
         $tableInfo = TablesInfoListModel::factory()->create();
-        $tableRes = TablesModel::create(
-            [
-                'guest_number' => 4,
-                'table_id' => $tableInfo->id,
-                'user_id' => $user->id
-            ]);
+        $tableRes = TablesModel::factory()->create();
 
         $response = $this->postJson('/api/reservation/time/'. $user->id,
             [
@@ -77,12 +72,7 @@ class ReservationTimeTest extends TestCase
     {
         $user = User::factory()->create();
         $tableInfo = TablesInfoListModel::factory()->create();
-        $tableRes = TablesModel::create(
-            [
-                'guest_number' => 4,
-                'table_id' => $tableInfo->id,
-                'user_id' => $user->id
-            ]);
+        $tableRes = TablesModel::factory()->create();
 
         $response = $this->actingAs($user)->postJson('/api/reservation/time/'. $user->id,
             [
