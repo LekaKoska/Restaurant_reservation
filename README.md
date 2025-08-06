@@ -1,5 +1,5 @@
-<h1 align="center">🍽️ Restaurant API Reservation</h1>
-<p align="center">
+<h1>🍽️ Restaurant API Reservation</h1>
+<p>
   A RESTful API for restaurant table reservations
 </p>
 
@@ -8,9 +8,9 @@
 ## 📌 Project description
 
 This Laravel REST API  allows users (guests) to:
-- 📅 Reserve a table at the restaurant,
-- 🕒 Add a time to their reservation,
-- ❌ Cancel a reservation
+-  Reserve a table at the restaurant,
+-  Add a time to their reservation,
+-  Cancel a reservation
 
 
 
@@ -53,9 +53,9 @@ This Laravel REST API  allows users (guests) to:
 Laravel Sanctum is used for API authentication
 
 After logging in, the user receives a token which must be sent in the request header:
-
+```laravel
 Authorization: Bearer {token}
-
+```
 # 📁 1. Clone the repository
 ```laravel
 git clone https://github.com/your-username/Restaurant_api_reservation.git
@@ -67,15 +67,17 @@ cd Restaurant_api_reservation
 composer install
 ```
 # 🔐 3. Create .env file
+```laravel
 cp .env.example .env
-
+```
 # 🗄️ 4. Run migrations and seeders
 ```laravel
 php artisan migrate --seed
 ```
 # 🔑 5. Generate application key
+```laravel
 php artisan key:generate
-
+```
 # ▶️ 6. Start the server
 ```laravel
 php artisan serve
