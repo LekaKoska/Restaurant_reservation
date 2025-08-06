@@ -91,16 +91,16 @@ php artisan serve
 Below this text you will get few options and information how to  test this application.
 
  1. If you using some API platform to test:
-     - You can test this application in [Postman]([https://www.postman.com/]).
+     - You can test this application in [Postman](https://www.postman.com/).
        
  2. If you using Swagger:
-    This project using [L5 Swagger][(https://github.com/DarkaOnLine/L5-Swagger)]
+    This project using [L5 Swagger](https://github.com/DarkaOnLine/L5-Swagger)
     
     - First step you need to generate Swagger
     ```laravel
     php artisan l5-swagger:generate
     ```
-    - When you successfully generate Swagger you need to start server(*if you already start don't do this*)
+    - When you successfully generate Swagger you need to start server(**if you already start don't do this**)
     ```laravel
     php artisan serve
     ```
