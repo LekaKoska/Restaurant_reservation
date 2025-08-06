@@ -48,7 +48,6 @@ This Laravel REST API  allows users (guests) to:
 
 ---
 
-
 ## 🔐 Authentication
 Laravel Sanctum is used for API authentication
 
@@ -56,6 +55,10 @@ After logging in, the user receives a token which must be sent in the request he
 ```laravel
 Authorization: Bearer {token}
 ```
+---
+## 🚀 Deployment
+To deploy and run this Laravel application, follow the steps below:
+
 # 📁 1. Clone the repository
 ```laravel
 git clone https://github.com/your-username/Restaurant_api_reservation.git
@@ -82,3 +85,28 @@ php artisan key:generate
 ```laravel
 php artisan serve
 ```
+--- 
+## 🛠️ Testing
+
+Below this text you will get few options and information how to  test this application.
+
+ 1. If you using some API platform to test:
+     - You can test this application in [Postman]([https://www.postman.com/]).
+       
+ 2. If you using Swagger:
+    This project using [L5 Swagger][(https://github.com/DarkaOnLine/L5-Swagger)]
+    
+    - First step you need to generate Swagger
+    ```laravel
+    php artisan l5-swagger:generate
+    ```
+    - When you successfully generate Swagger you need to start server(*if you already start don't do this*)
+    ```laravel
+    php artisan serve
+    ```
+    - After that documentation will be available into this link
+    ```laravel
+    http://localhost:8000/api/documentation
+    ```   
+    
+           
