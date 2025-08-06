@@ -63,17 +63,20 @@ cd Restaurant_api_reservation
 ```
 
 # ⚙️ 2. Install dependencies
+```laravel
 composer install
-
+```
 # 🔐 3. Create .env file
 cp .env.example .env
 
 # 🗄️ 4. Run migrations and seeders
+```laravel
 php artisan migrate --seed
-
+```
 # 🔑 5. Generate application key
 php artisan key:generate
 
 # ▶️ 6. Start the server
+```laravel
 php artisan serve
-
+```
