@@ -57,8 +57,10 @@ After logging in, the user receives a token which must be sent in the request he
 Authorization: Bearer {token}
 
 # 📁 1. Clone the repository
+```laravel
 git clone https://github.com/your-username/Restaurant_api_reservation.git
 cd Restaurant_api_reservation
+```
 
 # ⚙️ 2. Install dependencies
 composer install
