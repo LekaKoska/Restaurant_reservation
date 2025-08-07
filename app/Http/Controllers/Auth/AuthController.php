@@ -145,7 +145,7 @@ class AuthController extends Controller
     {
         Auth::user()->currentAccessToken()->delete();
 
-        return ResponseServices::successResponse(message: "Logged out successfully and token has been deleted");
+        return ResponseServices::successResponse(message: "Logged out successfully and token has been deleted", code: 200);
 
     }
 }
