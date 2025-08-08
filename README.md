@@ -73,13 +73,13 @@ composer install
 ```laravel
 cp .env.example .env
 ```
-# 🗄️ 4. Run migrations and seeders
-```laravel
-php artisan migrate --seed
-```
-# 🔑 5. Generate application key
+# 🔑 4. Generate application key
 ```laravel
 php artisan key:generate
+```
+# 🗄️ 5. Run migrations and seeders
+```laravel
+php artisan migrate --seed
 ```
 # ▶️ 6. Start the server
 ```laravel
