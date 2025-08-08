@@ -3,6 +3,7 @@
 namespace Tests\Feature\Reservation;
 
 use App\Models\TablesInfoListModel;
+use App\Models\TablesModel;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -129,6 +130,49 @@ class TableReservationTest extends TestCase
             [
                 'user_id' => $user->id
             ]);
+    }
+
+    public function test_invalid_id_for_deleting_reservation()
+    {
+        $user = User::factory()->create();
+        $table = TablesInfoListModel::factory()->create();
+        $reservation = TablesModel::factory()->create(
+            [
+                'guest_number' => 3,
+                'table_id' => $table->id,
+                'user_id' => $user->id
+            ]);
+
+        $response = $this->actingAs($user)->deleteJson('/api/reservation/delete/' . 55)->assertStatus(403);
+
+        $response->assertJsonFragment(
+            [
+                'status' => false
+            ]);
+
+
+
+    }
+
+    public function test_deleting_reservation_successfully()
+    {
+        $user = User::factory()->create();
+        $table = TablesInfoListModel::factory()->create();
+        $reservation = TablesModel::factory()->create(
+            [
+                'guest_number' => 3,
+                'table_id' => $table->id,
+                'user_id' => $user->id
+            ]);
+
+        $response = $this->actingAs($user)->deleteJson('/api/reservation/delete/' . $user->id)->assertStatus(200);
+
+        $response->assertJsonFragment(
+            [
+                'status' => true,
+                'message' => "Your reservation has been canceled"
+            ]);
+
     }
 
 }
