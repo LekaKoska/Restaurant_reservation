@@ -13,6 +13,7 @@ use App\Repository\TableInfoRepostory;
 use App\Repository\UserReservationRepository;
 use App\Services\ResponseServices;
 use http\Env\Request;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
 use OpenApi\Annotations as OA;
@@ -225,18 +226,23 @@ class ReservationController extends Controller
 
     public function delete($id)
     {
+        try {
+            $reservationDelete = TablesModel::findOrFail($id); // If you pass matching id put it into $reservationDelete in opposite throw an error
+            if($reservationDelete->tableInfo)
+            {
+                $reservationDelete->tableInfo->status = TablesInfoListModel::STATUS_AVAILABLE;
+                $reservationDelete->tableInfo->save();
 
-        $reservationDelete = TablesModel::findOrFail($id); // If you pass matching id put it into $reservationDelete in opposite throw an error
-        if($reservationDelete->tableInfo)
-        {
-            $reservationDelete->tableInfo->status = TablesInfoListModel::STATUS_AVAILABLE;
-            $reservationDelete->tableInfo->save();
+            }
 
+            $reservationDelete->delete();
+        } catch (ModelNotFoundException $e) {
+
+            return ResponseServices::errorResponse(message: $e->getMessage());
         }
 
-        $reservationDelete->delete();
 
 
-        return ResponseServices::successResponse(message: "Your reservation has been canceled");
+        return ResponseServices::successResponse(message: "Your reservation has been canceled", code: 200);
     }
 }
