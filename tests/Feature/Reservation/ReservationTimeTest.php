@@ -76,6 +76,7 @@ class ReservationTimeTest extends TestCase
 
         $response = $this->actingAs($user)->postJson('/api/reservation/time/'. $user->id,
             [
+                'user_id' => $user->id,
                 'table_id' => $tableRes->id,
                 'reservation_date' => '2025-02-06 19:00:00'
             ]);

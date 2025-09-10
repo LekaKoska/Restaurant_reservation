@@ -21,15 +21,12 @@ class TableReservationTest extends TestCase
 
         $table = TablesInfoListModel::factory()->create();
 
-
         $this->actingAs($user)->postJson('api/reservation/',
             [
                 'user_id' => $user->id,
                 'guest_number' => 3,
                 'table_id' => $table->id
             ])->assertCreated();
-
-
 
         $this->assertDatabaseHas('tables',
             ['user_id' => $user->id]);
@@ -142,7 +139,7 @@ class TableReservationTest extends TestCase
                 'table_id' => $table->id,
                 'user_id' => $user->id
             ]);
-
+                                                                                    // invalid id
         $response = $this->actingAs($user)->deleteJson('/api/reservation/delete/' . 55)->assertStatus(403);
 
         $response->assertJsonFragment(
