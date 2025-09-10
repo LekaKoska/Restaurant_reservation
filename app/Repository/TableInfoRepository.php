@@ -3,7 +3,7 @@ namespace App\Repository;
 
 use App\Models\TablesInfoListModel;
 
-class TableInfoRepostory
+class TableInfoRepository
 {
 
 
@@ -17,6 +17,12 @@ class TableInfoRepostory
 
     public function allTablesInfo()
     {
-        return $this->tableInfoModel->all();
+        return $this->tableInfoModel->all()->map(function($table){
+            return [
+                "table_id" => $table->table_num,
+                "location" => $table->location,
+                "status" => $table->status
+            ];
+        })->toArray();
     }
 }
