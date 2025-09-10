@@ -22,6 +22,7 @@ class TimeReservationRequest extends FormRequest
     public function rules(): array
     {
         return [
+            "user_id" => "exists:users,id" ,
             "reservation_date" => "required|date"
         ];
     }
