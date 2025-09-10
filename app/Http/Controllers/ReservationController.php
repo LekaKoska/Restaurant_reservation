@@ -9,7 +9,7 @@ use App\Models\TablesInfoListModel;
 use App\Models\TablesModel;
 use App\Models\User;
 use App\Repository\ReservationTimeRepository;
-use App\Repository\TableInfoRepostory;
+use App\Repository\TableInfoRepository;
 use App\Repository\UserReservationRepository;
 use App\Services\ResponseServices;
 use http\Env\Request;
@@ -23,7 +23,7 @@ class ReservationController extends Controller
 {
 
     public function __construct(protected UserReservationRepository $userReservationRepo,
-                                protected TableInfoRepostory $tableInfoRepo,
+                                protected TableInfoRepository       $tableInfoRepo,
                                 protected ReservationTimeRepository $timeReservationRepo)
     {}
 
@@ -80,19 +80,25 @@ class ReservationController extends Controller
 
         }
 
+        try {
+            $tableReservation = $this->userReservationRepo->creatingReservation($user, $request);
 
-        $tableReservation = $this->userReservationRepo->creatingReservation($user, $request);
-
-        $url = \url("api/reservation/time/{$user->id}");
-        $deleteUrl = \url("api/reservation/delete/{$table->resInfo->id}");
-
-
-        $table->status = TablesInfoListModel::STATUS_TAKEN;
-        $table->save();
+            $url = \url("api/reservation/time/{$user->id}");
+            $deleteUrl = \url("api/reservation/delete/{$table->resInfo->id}");
 
 
+            $table->status = TablesInfoListModel::STATUS_TAKEN;
+            $table->save();
 
-        return ResponseServices::successResponse(data: $tableReservation, message: "Your reservation was created, please set your time by clicking on $url, if you want to cancel your reservation please click on $deleteUrl", code: 201);
+
+
+            return ResponseServices::successResponse(data: $tableReservation, message: "Your reservation was created, please set your time by clicking on $url, if you want to cancel your reservation please click on $deleteUrl", code: 201);
+
+
+        } catch (\Throwable $e)
+        {
+            return ResponseServices::errorResponse(message: "Unexpected error ". $e->getMessage());
+        }
 
     }
 
@@ -115,17 +121,7 @@ class ReservationController extends Controller
 
         $tables = $this->tableInfoRepo->allTablesInfo();
 
-
-        foreach ($tables as $table)
-        {
-           $data[] =  [
-                        "table_id" => $table['table_num'],
-                        "location" => $table['location'],
-                        "status" => $table['status']
-                    ];
-
-        }
-        return ResponseServices::successResponse(data: $data, code: Response::HTTP_OK);
+        return ResponseServices::successResponse(data: $tables, code: Response::HTTP_OK);
 
 
     }
@@ -186,13 +182,18 @@ class ReservationController extends Controller
        {
            return ResponseServices::errorResponse(message: "You have already set a time for your reservation!");
        }
-
-        $time = $this->timeReservationRepo->addingTime($name, $request);
+        try {
+            $time = $this->timeReservationRepo->addingTime($name, $request);
 
             $this->timeReservationRepo->mail($name, $time);
 
 
             return ResponseServices::successResponse(data: $time, message: "Order accepted, check your mail for reservation info");
+        } catch (\Throwable $e)
+        {
+            return ResponseServices::errorResponse(message: $e->getMessage());
+        }
+
 
 
 
@@ -224,7 +225,7 @@ class ReservationController extends Controller
      * )
      */
 
-    public function delete($id)
+    public function delete(int $id): JsonResponse
     {
         try {
             $reservationDelete = TablesModel::findOrFail($id); // If you pass matching id put it into $reservationDelete in opposite throw an error
