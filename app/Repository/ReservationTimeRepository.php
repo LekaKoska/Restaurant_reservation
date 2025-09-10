@@ -9,7 +9,7 @@ class ReservationTimeRepository
 {
     public function __construct(protected ReservationTimeModel $time)
     {}
-    public function addingTime($name, $request)
+    public function addingTime($name, $request): ReservationTimeModel
     {
         return ReservationTimeModel::create(
             [

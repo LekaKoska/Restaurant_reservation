@@ -15,7 +15,7 @@ class TableInfoRepository
      return $this->tableInfoModel->find($request->get('table_id'));
     }
 
-    public function allTablesInfo()
+    public function allTablesInfo(): array
     {
         return $this->tableInfoModel->all()->map(function($table){
             return [

@@ -10,7 +10,7 @@ class AuthRepository
 {
     public function __construct(protected User $authUserModel)
     {}
-    public  function register($request)
+    public  function register($request): User
     {
         return User::create([
             "name" => $request->get("name"),
@@ -19,7 +19,7 @@ class AuthRepository
         ]);
     }
 
-    public function url($user)
+    public function url($user): string
     {
         return URL::temporarySignedRoute(
             "verification.verify",
