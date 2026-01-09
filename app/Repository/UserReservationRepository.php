@@ -11,7 +11,7 @@ class UserReservationRepository
     public function  __construct(protected TablesModel $tablesModel)
     {}
 
-    public function findUserReservation($user): ?User
+    public function findUserReservation($user)
     {
         return $this->tablesModel->firstWhere("user_id", $user->id);
     }

@@ -16,6 +16,7 @@ use http\Env\Request;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use OpenApi\Annotations as OA;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -64,41 +65,34 @@ class ReservationController extends Controller
     {
         $user = Auth::user();
 
-       $userExist = $this->userReservationRepo->findUserReservation($user);
-
-        if($userExist)
+        return DB::transaction(function () use ($user, $request)
         {
-            return ResponseServices::errorResponse(message: "You already have reservation");
+            $userExist = $this->userReservationRepo->findUserReservation($user);
+            if($userExist)
+            {
+                return ResponseServices::errorResponse(message: "You already have reservation");
+            }
+            $table = $this->tableInfoRepo->checkStatus($request);
 
-        }
+            if ($table->status === TablesInfoListModel::STATUS_TAKEN) {
 
-        $table = $this->tableInfoRepo->checkStatus($request);
+                return ResponseServices::errorResponse(message: "This table is already taken!");
+            }
+            try {
+                $tableReservation = $this->userReservationRepo->creatingReservation($user, $request);
 
-        if ($table->status === TablesInfoListModel::STATUS_TAKEN) {
+                $url = \url("api/reservation/time/{$user->id}");
+                $deleteUrl = \url("api/reservation/delete/{$table->resInfo->id}");
+                $table->status = TablesInfoListModel::STATUS_TAKEN;
+                $table->save();
 
-            return ResponseServices::errorResponse(message: "This table is already taken!");
+                return ResponseServices::successResponse(data: $tableReservation, message: "Your reservation was created, please set your time by clicking on $url, if you want to cancel your reservation please click on $deleteUrl", code: 201);
 
-        }
-
-        try {
-            $tableReservation = $this->userReservationRepo->creatingReservation($user, $request);
-
-            $url = \url("api/reservation/time/{$user->id}");
-            $deleteUrl = \url("api/reservation/delete/{$table->resInfo->id}");
-
-
-            $table->status = TablesInfoListModel::STATUS_TAKEN;
-            $table->save();
-
-
-
-            return ResponseServices::successResponse(data: $tableReservation, message: "Your reservation was created, please set your time by clicking on $url, if you want to cancel your reservation please click on $deleteUrl", code: 201);
-
-
-        } catch (\Throwable $e)
-        {
-            return ResponseServices::errorResponse(message: "Unexpected error ". $e->getMessage());
-        }
+            } catch (\Throwable $e)
+            {
+                return ResponseServices::errorResponse(message: "Unexpected error ". $e->getMessage());
+            }
+        });
 
     }
 

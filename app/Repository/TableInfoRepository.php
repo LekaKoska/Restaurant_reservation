@@ -2,19 +2,14 @@
 namespace App\Repository;
 
 use App\Models\TablesInfoListModel;
-
 class TableInfoRepository
 {
-
-
     public function __construct(protected TablesInfoListModel $tableInfoModel)
     {}
-
     public function checkStatus($request)
     {
-     return $this->tableInfoModel->find($request->get('table_id'));
+     return $this->tableInfoModel->where('id', $request->get('table_id'))->lockForUpdate()->first();
     }
-
     public function allTablesInfo(): array
     {
         return $this->tableInfoModel->all()->map(function($table){
