@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Models\User;
 use http\Env\Response;
 use Illuminate\Auth\Events\Verified;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
@@ -62,17 +63,17 @@ class VerifyEmailController extends Controller
      * )
      */
 
-    public function __invoke(EmailVerificationRequest $request)
+    public function __invoke($id, EmailVerificationRequest $request)
     {
-        if ($request->user()->hasVerifiedEmail()) {
-            return response()->json(['message' => 'Email already verified.'], \Symfony\Component\HttpFoundation\Response::HTTP_FORBIDDEN);
+        $user = User::findOrFail($request->route('id'));
+        if (! hash_equals((string) $request->route('hash'), sha1($user->getEmailForVerification()))) {
+            abort(403, 'Invalid verification link');
         }
-
-        if ($request->user()->markEmailAsVerified()) {
-            event(new Verified($request->user()));
+        if (! $user->hasVerifiedEmail()) {
+            $user->markEmailAsVerified();
+            event(new Verified($user));
         }
-
-        return response()->json(['message' => 'Email verified successfully.'], \Symfony\Component\HttpFoundation\Response::HTTP_OK);
+        return response()->json(['message' => 'Email verified successfully.']);
     }
-}
+ }
 

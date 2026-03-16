@@ -23,7 +23,7 @@ Route::prefix("/auth")->controller(AuthController::class)->group( function ()
 
 
 Route::get('/email/verify/{id}/{hash}', VerifyEmailController::class)
-    ->middleware(['auth:sanctum', 'signed'])->name('verification.verify');
+    ->middleware(['signed'])->name('verification.verify');
 
 Route::post('/email/verification-notification', function (Request $request) {
     $request->user()->sendEmailVerificationNotification();
