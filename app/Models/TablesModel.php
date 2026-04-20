@@ -5,6 +5,7 @@ namespace App\Models;
 use Database\Factories\TablesFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class TablesModel extends Model
 {
@@ -21,6 +22,11 @@ class TablesModel extends Model
     public static function newFactory()
     {
         return TablesFactory::new();
+    }
+
+    public function userReservation(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
     }
 
 }

@@ -112,12 +112,8 @@ class ReservationController extends Controller
 
     public function info(): JsonResponse
     {
-
         $tables = $this->tableInfoRepo->allTablesInfo();
-
         return ResponseServices::successResponse(data: $tables, code: Response::HTTP_OK);
-
-
     }
 
     /**
@@ -165,32 +161,22 @@ class ReservationController extends Controller
 
     public function time(TimeReservationRequest $request, User $name): JsonResponse
     {
-
-
         if (!$name->reservedTable)
         {
             return ResponseServices::errorResponse(message: "You dont have reservation!");
         }
-
        if($name->reservedTime)
        {
            return ResponseServices::errorResponse(message: "You have already set a time for your reservation!");
        }
         try {
             $time = $this->timeReservationRepo->addingTime($name, $request);
-
             $this->timeReservationRepo->mail($name, $time);
-
-
             return ResponseServices::successResponse(data: $time, message: "Order accepted, check your mail for reservation info");
         } catch (\Throwable $e)
         {
             return ResponseServices::errorResponse(message: $e->getMessage());
         }
-
-
-
-
     }
 
     /**
@@ -229,15 +215,25 @@ class ReservationController extends Controller
                 $reservationDelete->tableInfo->save();
 
             }
-
             $reservationDelete->delete();
         } catch (ModelNotFoundException $e) {
 
             return ResponseServices::errorResponse(message: $e->getMessage());
         }
-
-
-
         return ResponseServices::successResponse(message: "Your reservation has been canceled", code: 200);
+    }
+
+
+    public function reservationHistory()
+    {
+        $user = Auth::user();
+        if($this->userReservationRepo->findUserReservation($user)) {
+            $userReservationHistroy = $this->userReservationRepo->allUserReservations($user);
+            return ResponseServices::successResponse(data: $userReservationHistroy, code: Response::HTTP_OK);
+        } else
+        {
+            return redirect()->back();
+        }
+
     }
 }
