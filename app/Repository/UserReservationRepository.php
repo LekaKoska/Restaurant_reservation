@@ -25,9 +25,9 @@ class UserReservationRepository
         ]);
     }
 
-    public function allUserReservations($user)
+     public function allUserReservations($user)
     {
-        return $this->tablesModel->with("userReservation")->where("user_id", $user->id)->get();
+        return $this->tablesModel->with("userTimeReservation")->where("user_id", $user->id)->get();
     }
 
 }

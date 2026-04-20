@@ -11,9 +11,9 @@ class ReservationTimeModel extends Model
 
     protected $hidden = ['id', 'created_at', 'updated_at'];
 
-    public function   reservetionTime()
+    public function reservetionTime()
     {
-        return $this->hasOne(TablesModel::class);
+        return $this->hasMany(TablesModel::class);
     }
 
 }

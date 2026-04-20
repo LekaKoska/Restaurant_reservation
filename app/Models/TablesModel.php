@@ -6,6 +6,7 @@ use Database\Factories\TablesFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class TablesModel extends Model
 {
@@ -24,9 +25,9 @@ class TablesModel extends Model
         return TablesFactory::new();
     }
 
-    public function userReservation(): BelongsTo
+    public function userTimeReservation(): HasOne
     {
-        return $this->belongsTo(User::class);
+        return $this->hasOne(ReservationTimeModel::class, "table_id", "table_id");
     }
 
 }
