@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\TableReservationRequest;
 use App\Http\Requests\TimeReservationRequest;
+use App\Models\ReservationTimeModel;
 use App\Models\TablesInfoListModel;
 use App\Models\TablesModel;
 use App\Models\User;
@@ -83,7 +84,7 @@ class ReservationController extends Controller
             try {
                 $tableReservation = $this->userReservationRepo->creatingReservation($user, $request);
 
-                $url = \url("api/reservation/time/{$user->id}");
+                $url = \url("api/reservation/time");
                 $deleteUrl = \url("api/reservation/delete/{$table->resInfo->id}");
                 $table->status = TablesInfoListModel::STATUS_TAKEN;
                 $table->save();
@@ -161,8 +162,9 @@ class ReservationController extends Controller
      *
      */
 
-    public function time(TimeReservationRequest $request, User $name): JsonResponse
+    public function time(TimeReservationRequest $request): JsonResponse
     {
+        $name = Auth::user();
         if (!$name->reservedTable)
         {
             return ResponseServices::errorResponse(message: "You dont have reservation!");
