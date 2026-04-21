@@ -34,7 +34,6 @@ Route::get("/tables", [ReservationController::class, "info"]);
 
 Route::controller(ReservationController::class)->middleware(["auth:sanctum", EnsureEmailVerified::class])->prefix("reservation")->group(function (){
     Route::post("/","index");
-    Route::post("/time",  "time")->name("time.reservation");
     Route::get('/show', "reservationHistory");
     Route::delete("delete/{id}", "delete")->name("delete.reservation");
 

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\TableReservationRequest;
 use App\Http\Requests\TimeReservationRequest;
+use App\Models\Reservation;
 use App\Models\ReservationTimeModel;
 use App\Models\TablesInfoListModel;
 use App\Models\TablesModel;
@@ -27,8 +28,7 @@ class ReservationController extends Controller
 {
 
     public function __construct(protected UserReservationRepository $userReservationRepo,
-                                protected TableInfoRepository       $tableInfoRepo,
-                                protected ReservationTimeRepository $timeReservationRepo)
+                                protected Reservation $reservationRepo,
     {}
 
     /**

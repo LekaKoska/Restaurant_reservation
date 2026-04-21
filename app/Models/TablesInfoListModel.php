@@ -5,23 +5,22 @@ namespace App\Models;
 use Database\Factories\TableInfoListFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Enums\TableStatus;
 
 class TablesInfoListModel extends Model
 {
     use HasFactory;
 
-    protected $table = "tables_info_list";
+    const TABLE = "tables_info_list";
+
+    protected $table = self::TABLE;
     protected $hidden = ['id', 'created_at', 'updated_at'];
-    protected $fillable = ['table_num', "location", "status"];
+    protected $fillable = ["table_num", "location"];
+    protected $casts = ["status" => TableStatus::class];
     const LOCATION = ['north', 'east', 'west', 'south'];
 
     const STATUS_TAKEN = "taken";
     const STATUS_AVAILABLE = "available";
-
-    public function resInfo()
-    {
-        return $this->hasOne(TablesModel::class, "table_id", "id");
-    }
 
     public static function newFactory()
     {

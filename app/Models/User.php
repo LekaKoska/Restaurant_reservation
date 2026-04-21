@@ -14,6 +14,8 @@ class User extends Authenticatable implements MustVerifyEmail
 {
     use HasApiTokens, HasFactory, Notifiable;
 
+    const TABLE = "users";
+    protected $table = self::TABLE;
     protected $fillable = [
         'name',
         'email',
@@ -31,15 +33,5 @@ class User extends Authenticatable implements MustVerifyEmail
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
-    }
-
-    public function reservedTable(): HasOne
-    {
-        return $this->hasOne(TablesModel::class);
-    }
-
-    public function reservedTime(): HasOne
-    {
-        return $this->hasOne(ReservationTimeModel::class);
     }
 }
