@@ -2,8 +2,6 @@
 namespace App\Repository;
 
 use App\Models\TablesModel;
-use App\Models\User;
-
 class UserReservationRepository
 {
 

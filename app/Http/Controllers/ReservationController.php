@@ -12,13 +12,15 @@ use App\Repository\ReservationTimeRepository;
 use App\Repository\TableInfoRepository;
 use App\Repository\UserReservationRepository;
 use App\Services\ResponseServices;
-use http\Env\Request;
+use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Gate;
 use OpenApi\Annotations as OA;
 use Symfony\Component\HttpFoundation\Response;
+use Throwable;
 
 class ReservationController extends Controller
 {
@@ -208,23 +210,30 @@ class ReservationController extends Controller
     public function delete(int $id): JsonResponse
     {
         try {
-            $reservationDelete = TablesModel::findOrFail($id); // If you pass matching id put it into $reservationDelete in opposite throw an error
-            if($reservationDelete->tableInfo)
-            {
-                $reservationDelete->tableInfo->status = TablesInfoListModel::STATUS_AVAILABLE;
-                $reservationDelete->tableInfo->save();
+            $reservationDelete = TablesModel::with("userTimeReservation")->findOrFail($id);
+             Gate::authorize("delete", $reservationDelete);
 
+            if(!$reservationDelete->userTimeReservation) {
+                return ResponseServices::errorResponse(message: "Reservation is not completed!", code: Response::HTTP_FORBIDDEN);
             }
-            $reservationDelete->delete();
-        } catch (ModelNotFoundException $e) {
-
+        DB::transaction(function() use ($reservationDelete)
+        {
+                if($reservationDelete->tableInfo)
+                {
+                    $reservationDelete->tableInfo->status = TablesInfoListModel::STATUS_AVAILABLE;
+                    $reservationDelete->tableInfo->save();
+                }
+                    $reservationDelete->userTimeReservation->delete();
+                    $reservationDelete->delete();
+        });
+        } catch(Throwable $e)
+        {
             return ResponseServices::errorResponse(message: $e->getMessage());
         }
-        return ResponseServices::successResponse(message: "Your reservation has been canceled", code: 200);
+        return ResponseServices::successResponse(message: "Your reservation has been canceled", code: Response::HTTP_OK);
     }
 
-
-    public function reservationHistory()
+    public function reservationHistory(): JsonResponse
     {
         $user = Auth::user();
         if($this->userReservationRepo->findUserReservation($user)) {
@@ -232,8 +241,7 @@ class ReservationController extends Controller
             return ResponseServices::successResponse(data: $userReservationHistroy, code: Response::HTTP_OK);
         } else
         {
-            return redirect()->back();
+            return ResponseServices::errorResponse(message: "You don't have reservation", code: Response::HTTP_NOT_FOUND);
         }
-
     }
 }
