@@ -14,7 +14,7 @@ class TablesInfoListModel extends Model
     const TABLE = "tables_info_list";
 
     protected $table = self::TABLE;
-    protected $hidden = ['id', 'created_at', 'updated_at'];
+    protected $hidden = ['created_at', 'updated_at'];
     protected $fillable = ["table_num", "location"];
     protected $casts = ["status" => TableStatus::class];
     const LOCATION = ['north', 'east', 'west', 'south'];
