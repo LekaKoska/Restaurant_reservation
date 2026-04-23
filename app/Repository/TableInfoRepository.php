@@ -12,12 +12,7 @@ class TableInfoRepository
     }
     public function allTablesInfo(): array
     {
-        return $this->tableInfoModel->all()->map(function($table){
-            return [
-                "table_id" => $table->table_num,
-                "location" => $table->location,
-                "status" => $table->status
-            ];
-        })->toArray();
+        return $this->tableInfoModel->orderBy("table_num")->paginate()->toArray();
+
     }
 }
