@@ -10,6 +10,6 @@ class Reservation extends Model
     protected $table = self::TABLE;
     protected $fillable = [
         "table_id", "user_id", "guest_number",
-        "start_date", "end_time", "special_request"
+        "start_date", "end_date", "special_request"
         ];
 }

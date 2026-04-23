@@ -6,16 +6,14 @@ namespace App\Http\Controllers;
 use App\Http\Requests\TableReservationRequest;
 use App\Http\Requests\TimeReservationRequest;
 use App\Models\Reservation;
-use App\Models\ReservationTimeModel;
 use App\Models\TablesInfoListModel;
 use App\Models\TablesModel;
 use App\Models\User;
-use App\Repository\ReservationTimeRepository;
+use App\Repository\ReservationRepository;
 use App\Repository\TableInfoRepository;
-use App\Repository\UserReservationRepository;
+use App\Services\ReservationService;
 use App\Services\ResponseServices;
-use Illuminate\Auth\Access\AuthorizationException;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -27,8 +25,7 @@ use Throwable;
 class ReservationController extends Controller
 {
 
-    public function __construct(protected UserReservationRepository $userReservationRepo,
-                                protected Reservation $reservationRepo,
+    public function __construct(protected ReservationRepository $reservationRepo, protected TableInfoRepository $tableRepo)
     {}
 
     /**
@@ -64,39 +61,16 @@ class ReservationController extends Controller
      * )
      *
      */
-    public function index(TableReservationRequest $request): JsonResponse
+    public function store(TableReservationRequest $request,  ReservationService $reservationService)
     {
-        $user = Auth::user();
-
-        return DB::transaction(function () use ($user, $request)
+        $newReservation = $reservationService->endTimeReservation($request->validated());
+        try {
+            $reservation =  $this->reservationRepo->creatingReservation($newReservation);
+        } catch(Exception $e)
         {
-            $userExist = $this->userReservationRepo->findUserReservation($user);
-            if($userExist)
-            {
-                return ResponseServices::errorResponse(message: "You already have reservation");
-            }
-            $table = $this->tableInfoRepo->checkStatus($request);
-
-            if ($table->status === TablesInfoListModel::STATUS_TAKEN) {
-
-                return ResponseServices::errorResponse(message: "This table is already taken!");
-            }
-            try {
-                $tableReservation = $this->userReservationRepo->creatingReservation($user, $request);
-
-                $url = \url("api/reservation/time");
-                $deleteUrl = \url("api/reservation/delete/{$table->resInfo->id}");
-                $table->status = TablesInfoListModel::STATUS_TAKEN;
-                $table->save();
-
-                return ResponseServices::successResponse(data: $tableReservation, message: "Your reservation was created, please set your time by clicking on $url, if you want to cancel your reservation please click on $deleteUrl", code: 201);
-
-            } catch (\Throwable $e)
-            {
-                return ResponseServices::errorResponse(message: "Unexpected error ". $e->getMessage());
-            }
-        });
-
+            return ResponseServices::errorResponse(message: $e->getMessage());
+        }
+            return ResponseServices::successResponse(message: "Your reservation has been created", data: $reservation);
     }
 
     /**
@@ -115,7 +89,7 @@ class ReservationController extends Controller
 
     public function info(): JsonResponse
     {
-        $tables = $this->tableInfoRepo->allTablesInfo();
+        $tables = $this->tableRepo->allTablesInfo();
         return ResponseServices::successResponse(data: $tables, code: Response::HTTP_OK);
     }
 
