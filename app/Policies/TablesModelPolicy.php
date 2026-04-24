@@ -2,19 +2,21 @@
 
 namespace App\Policies;
 
-use App\Models\TablesModel;
+use App\Models\Reservation;
 use App\Models\User;
-use Illuminate\Auth\Access\Response;
+use App\OwnsResource;
 
-class TablesModelPolicy
+
+class ReservationsPolicy
 {
+    use OwnsResource;
 
     public function viewAny(User $user): bool
     {
         return false;
     }
 
-    public function view(User $user, TablesModel $tablesModel): bool
+    public function view(User $user, Reservation $reservation): bool
     {
         return false;
     }
@@ -24,19 +26,19 @@ class TablesModelPolicy
         return false;
     }
 
-    public function update(User $user, TablesModel $tablesModel): bool
+    public function update(User $user, Reservation $reservation): bool
     {
-        return false;
+        return $this->isOwner($user, $reservation);
     }
-    public function delete(User $user, TablesModel $tablesModel): bool
+    public function delete(User $user, Reservation $reservation): bool
     {
-        return $user->id === $tablesModel->user_id;
+        return $this->isOwner($user, $reservation);
     }
 
     /**
      * Determine whether the user can restore the model.
      */
-    public function restore(User $user, TablesModel $tablesModel): bool
+    public function restore(User $user, Reservation $reservation): bool
     {
         return false;
     }
@@ -44,7 +46,7 @@ class TablesModelPolicy
     /**
      * Determine whether the user can permanently delete the model.
      */
-    public function forceDelete(User $user, TablesModel $tablesModel): bool
+    public function forceDelete(User $user, Reservation $Reservation): bool
     {
         return false;
     }
