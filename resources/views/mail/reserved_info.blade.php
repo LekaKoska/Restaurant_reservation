@@ -4,13 +4,14 @@
     Your reservation has been accepted!
     Below this is your information about reservation:
 
-    Table number: {{$data['table_id']}}
-    Guest number: {{$data['guest_number']}}
-    Time: {{$data['reservation_date']}}
-    Reserved by: {{$data['name']}}
+    Table number: {{$reservation->table_id}}
+    Guest number: {{$reservation->guest_number}}
+    Start: {{$reservation->start_date->format('d.m.Y H:i')}}
+    End: {{$reservation->end_date->format('d.m.Y H:i')}}
+    Reserved by: {{$reservation->userReservations->name}}
 
 
 
 Thanks,<br>
-Restaurant Leka
+Restaurant ${APP_NAME}
 </x-mail::message>
