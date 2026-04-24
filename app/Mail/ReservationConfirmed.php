@@ -2,6 +2,7 @@
 
 namespace App\Mail;
 
+use App\Models\Reservation;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
@@ -14,10 +15,9 @@ class ReservationConfirmed extends Mailable
 {
     use Queueable, SerializesModels;
 
-    public function __construct(public array $data)
-    {
-        //
-    }
+    public function __construct(public Reservation $reservation)
+    {}
+
 
     public function envelope(): Envelope
     {
@@ -33,7 +33,7 @@ class ReservationConfirmed extends Mailable
             markdown: 'mail.reserved_info',
         );
     }
-    
+
     public function attachments(): array
     {
         return [];
