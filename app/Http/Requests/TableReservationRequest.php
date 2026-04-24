@@ -13,6 +13,8 @@ class TableReservationRequest extends FormRequest
             "guest_number" => "required|integer|min:1|max:9",
             "table_id" => "required|integer|min:1|max:23|exists:tables_info_list,id",
             "start_date" => "required|date",
+            "end_date" => "nullable|date",
+            "special_request" => "nullable|string"
         ];
     }
 }

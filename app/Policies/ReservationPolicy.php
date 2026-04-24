@@ -4,7 +4,7 @@ namespace App\Policies;
 
 use App\Models\Reservation;
 use App\Models\User;
-use App\OwnsResource;
+use App\Traits\OwnsResource;
 
 
 class ReservationPolicy

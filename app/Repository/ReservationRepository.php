@@ -13,9 +13,9 @@ class ReservationRepository
     {}
 
 
-    public function findUserReservation($user)
+    public function findUserReservation($reservation)
     {
-
+        return Reservation::firstWhere("table_id", $reservation->id);
     }
 
     public function creatingReservation(array $data)
@@ -36,7 +36,7 @@ class ReservationRepository
 
      public function allUserReservations($user)
     {
-        // return $this->tablesModel->with("userTimeReservation")->where("user_id", $user->id)->get();
+        return $this->reservationModel->with("userReservations")->where("user_id", $user->id)->get();
     }
 
 }
