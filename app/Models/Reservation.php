@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Reservation extends Model
 {
@@ -12,4 +13,14 @@ class Reservation extends Model
         "table_id", "user_id", "guest_number",
         "start_date", "end_date", "special_request"
         ];
+
+        protected $casts = [
+            "start_date" => "datetime",
+            "end_date" => "datetime"
+                            ];
+
+        public function userReservations(): BelongsTo
+        {
+            return $this->belongsTo(User::class, "user_id", "id");
+        }
 }
