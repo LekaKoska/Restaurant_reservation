@@ -37,7 +37,7 @@ Route::controller(ReservationController::class)->middleware(["auth:sanctum", Ens
     Route::get('/allreservations/{userId}', "reservationHistory")->name("show.reservation");
     Route::delete("delete/{id}", "delete")->name("delete.reservation");
     Route::get("/show/{reservation}", "show")->name("show.reservation");
-    Route::post("/update/{reservation}", "update")->name("update.reservation");
+    Route::patch("/update/{reservation}", "update")->name("update.reservation");
 
 });
 
