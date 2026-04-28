@@ -38,7 +38,7 @@ Route::controller(ReservationController::class)->middleware(["auth:sanctum", Ens
     Route::delete("delete/{reservation}", "delete")->name("delete.reservation");
     Route::get("/show/{reservation}", "show")->name("show.reservation");
     Route::patch("/update/{reservation}", "update")->name("update.reservation");
-
+    Route::get("/{table}/taken-slots", "takenSlots");
 });
 
 
