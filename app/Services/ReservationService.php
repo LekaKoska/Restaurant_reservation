@@ -3,9 +3,11 @@
 namespace App\Services;
 
 use App\Models\Reservation;
+use App\Models\TablesInfoListModel;
 use App\Repository\ReservationRepository;
 use Carbon\Carbon;
 use Illuminate\Http\Response;
+use Ramsey\Collection\Collection;
 
 class ReservationService
 {
@@ -39,5 +41,15 @@ class ReservationService
             }
 
         return $takenTable;
+    }
+
+    public function takenSlots(TablesInfoListModel $table)
+    {
+        return $table->takenSlots->map(function($reservation) {
+        return[
+            "start_date" => $reservation->start_date,
+            "end_date" => $reservation->end_date
+        ];
+      });
     }
 }

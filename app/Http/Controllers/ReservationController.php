@@ -6,6 +6,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\TableReservationRequest;
 use App\Http\Requests\UpdateReservationRequest;
 use App\Models\Reservation;
+use App\Models\TablesInfoListModel;
 use App\Models\User;
 use App\Repository\ReservationRepository;
 use App\Repository\TableInfoRepository;
@@ -77,6 +78,11 @@ class ReservationController extends Controller
     {
         Gate::authorize("view", $user);
         return ResponseServices::successResponse(data: $user->reservations);
+    }
+    public function takenSlots(TablesInfoListModel $table, ReservationService $reservationService): JsonResponse
+    {
+      $takenSlots = $reservationService->takenSlots($table);
+      return ResponseServices::successResponse(data: $takenSlots, code: Response::HTTP_OK);
     }
 }
 
