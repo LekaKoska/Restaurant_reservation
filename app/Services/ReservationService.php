@@ -18,13 +18,14 @@ class ReservationService
             {
                 return $data;
             }
-            $startDate = $data["start_date"] ?? $reservation->start_date;
+        $startDate = $data["start_date"] ?? $reservation->start_date;
         $endDate = Carbon::parse($startDate)->addHours(2);
         $data["end_date"] = $endDate;
+        $data["start_date"] = $startDate;
         return $data;
     }
 
-    public function takenTable($data, $reservationId)
+    public function takenTable($data, $reservationId = null)
     {
          $takenTable = Reservation::where("table_id", $data["table_id"])->where(function($query) use ($data, $reservationId)
         {
@@ -32,7 +33,6 @@ class ReservationService
             $query->where("start_date", "<=", $data["end_date"]);
             $query->where("id", "!=", $reservationId);
         })->exists();
-
         if($takenTable)
             {
                 throw new \Exception(message: "Table is taken in this period!", code: Response::HTTP_UNPROCESSABLE_ENTITY);
