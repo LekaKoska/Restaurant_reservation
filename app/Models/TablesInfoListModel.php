@@ -6,6 +6,7 @@ use Database\Factories\TableInfoListFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Enums\TableStatus;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class TablesInfoListModel extends Model
 {
@@ -25,6 +26,10 @@ class TablesInfoListModel extends Model
     public static function newFactory()
     {
         return TableInfoListFactory::new();
+    }
+    public function takenSlots(): HasMany
+    {
+        return $this->hasMany(Reservation::class, "table_id", "id");
     }
 
 }
