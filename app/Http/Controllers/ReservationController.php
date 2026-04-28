@@ -6,6 +6,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\TableReservationRequest;
 use App\Http\Requests\UpdateReservationRequest;
 use App\Models\Reservation;
+use App\Models\User;
 use App\Repository\ReservationRepository;
 use App\Repository\TableInfoRepository;
 use App\Services\ReservationService;
@@ -14,7 +15,6 @@ use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Gate;
 use Symfony\Component\HttpFoundation\Response;
-
 
 class ReservationController extends Controller
 {
@@ -71,6 +71,12 @@ class ReservationController extends Controller
         return ResponseServices::errorResponse(message: $e->getMessage());
         }
          return ResponseServices::successResponse(message: "Your reservation is deleted", code: Response::HTTP_OK);
+    }
+
+    public function reservationHistory(User $user): JsonResponse
+    {
+        Gate::authorize("view", $user);
+        return ResponseServices::successResponse(data: $user->reservations);
     }
 }
 
