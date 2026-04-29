@@ -3,7 +3,6 @@
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Auth\VerifyEmailController;
 use App\Http\Controllers\ReservationController;
-use App\Http\Middleware\EnsureEmailVerified;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -15,9 +14,7 @@ Route::get('/user', function (Request $request) {
 Route::prefix("/auth")->controller(AuthController::class)->group( function ()
 {
     Route::post("/register",  "register");
-
     Route::post("/login",  "login");
-
     Route::post("/logout",  "logout")->middleware("auth:sanctum");
 });
 
