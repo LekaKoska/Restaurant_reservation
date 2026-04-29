@@ -32,7 +32,7 @@ Route::post('/email/verification-notification', function (Request $request) {
 
 Route::get("/tables", [ReservationController::class, "info"]);
 
-Route::controller(ReservationController::class)->middleware(["auth:sanctum", EnsureEmailVerified::class])->prefix("reservation")->group(function (){
+Route::controller(ReservationController::class)->middleware(["auth:sanctum","email_verify"])->prefix("reservation")->group(function (){
     Route::post("/","store");
     Route::get('/all/{user}', "reservationHistory")->name("show.reservation");
     Route::delete("delete/{reservation}", "delete")->name("delete.reservation");
