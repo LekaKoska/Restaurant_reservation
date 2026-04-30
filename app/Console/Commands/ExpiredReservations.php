@@ -10,7 +10,7 @@ class ExpiredReservations extends Command
 {
     protected $signature = 'app:expired-reservations';
 
-    protected $description = 'This command check all expired reservations and change they status to false';
+    protected $description = 'This command checks all reservations with an expired date and changes their status to false.';
 
     public function handle()
     {
