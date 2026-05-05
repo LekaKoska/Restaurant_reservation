@@ -11,6 +11,14 @@ class ReservationPolicy
 {
     use OwnsResource;
 
+    public function before(User $user): bool|null
+    {
+        if ($user->is_admin) {
+            return true;
+        }
+        return null;
+    }
+
     public function viewAny(User $user): bool
     {
         return false;
