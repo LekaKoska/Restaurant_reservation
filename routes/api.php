@@ -11,13 +11,11 @@ Route::get('/user', function (Request $request) {
     return $request->user();
 })->middleware('auth:sanctum');
 
-Route::prefix("/auth")->controller(AuthController::class)->group( function ()
-{
+Route::prefix("/auth")->controller(AuthController::class)->group(function () {
     Route::post("/register",  "register");
     Route::post("/login",  "login");
     Route::post("/logout",  "logout")->middleware("auth:sanctum");
 });
-
 
 Route::get('/email/verify/{id}/{hash}', VerifyEmailController::class)
     ->middleware(['signed'])->name('verification.verify');
@@ -29,14 +27,11 @@ Route::post('/email/verification-notification', function (Request $request) {
 
 Route::get("/tables", [ReservationController::class, "info"]);
 
-Route::controller(ReservationController::class)->middleware(["auth:sanctum","email_verify"])->prefix("reservation")->group(function (){
-    Route::post("/","store");
+Route::controller(ReservationController::class)->middleware(["auth:sanctum", "email_verify"])->prefix("reservation")->group(function () {
+    Route::post("/", "store");
     Route::get('/all/{user}', "reservationHistory")->name("show.reservation");
     Route::delete("delete/{reservation}", "delete")->name("delete.reservation");
     Route::get("/show/{reservation}", "show")->name("show.reservation");
     Route::patch("/update/{reservation}", "update")->name("update.reservation");
     Route::get("/{table}/taken-slots", "takenSlots");
 });
-
-
-
