@@ -39,4 +39,4 @@ Route::middleware(["auth:sanctum", "email_verify"])->group(function ()
     });
     Route::apiResource(name: "review", controller: ReviewController::class);
 });
-;
+
