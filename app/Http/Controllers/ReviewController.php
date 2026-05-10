@@ -2,9 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\ReviewRequest;
+use App\Models\Reservation;
 use App\Models\Review;
+use App\Services\ResponseServices;
+use App\Services\ReviewService;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class ReviewController extends Controller
 {
@@ -16,15 +21,16 @@ class ReviewController extends Controller
 
     public function index()
     {
-        dd("RADI");
+
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(ReviewRequest $request, ReviewService $reviewService)
     {
-        //
+      $review = $reviewService->createReview(Auth::user(), $request->validated());
+      return ResponseServices::successResponse(data: $review, message: "Successfully created Review");
     }
 
     /**
