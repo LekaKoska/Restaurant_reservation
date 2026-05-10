@@ -16,7 +16,6 @@ class ReviewService
         {
             throw new AuthorizationException("You are not owner of this reservation");
         }
-        $data['user_id'] = $user->id;
-        return Review::create($data);
+        return $user->reviews()->create($data);
     }
 }
