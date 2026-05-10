@@ -48,6 +48,11 @@ class User extends Authenticatable implements MustVerifyEmail, FilamentUser
 
     public function reservations(): HasMany
     {
-        return $this->hasMany(Reservation::class, "user_id", "id");
+        return $this->hasMany(related: Reservation::class, foreignKey: "user_id", localKey: "id");
+    }
+
+    public function reviews(): HasMany
+    {
+        return $this->hasMany(related: Review::class, foreignKey: 'user_id', localKey: 'id');
     }
 }
