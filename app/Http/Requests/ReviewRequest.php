@@ -11,7 +11,7 @@ class ReviewRequest extends FormRequest
     {
         return [
             "reservation_id" => "required|exists:reservations,id",
-            "rating" => "required|min:1, max:5",
+            "rating" => "required|integer|min:1|max:5",
             "comment" => "nullable|string|max:255"
         ];
     }
