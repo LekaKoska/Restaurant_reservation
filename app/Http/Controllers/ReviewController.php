@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\DTOs\CreateReviewDTO;
 use App\Http\Requests\ReviewRequest;
 use App\Models\Reservation;
 use App\Models\Review;
@@ -29,7 +30,8 @@ class ReviewController extends Controller
      */
     public function store(ReviewRequest $request, ReviewService $reviewService)
     {
-      $review = $reviewService->createReview(Auth::user(), $request->validated());
+      $reviewDTO = CreateReviewDTO::fromRequest($request);
+      $review = $reviewService->createReview(Auth::user(), $reviewDTO);
       return ResponseServices::successResponse(data: $review, message: "Successfully created Review");
     }
 

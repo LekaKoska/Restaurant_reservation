@@ -2,19 +2,17 @@
 
 namespace App\Services;
 
+use App\DTOs\CreateReviewDTO;
 use App\Models\Reservation;
 use App\Models\Review;
 use App\Models\User;
 use Illuminate\Auth\Access\AuthorizationException;
-use Illuminate\Database\UniqueConstraintViolationException;
-use Illuminate\Http\Response;
 use Symfony\Component\HttpKernel\Exception\ConflictHttpException;
-
 class ReviewService
 {
-    public function createReview(User $user, array $data): Review
+    public function createReview(User $user, CreateReviewDTO $data): Review
     {
-        $reservation = Reservation::findOrFail($data['reservation_id']);
+        $reservation = Reservation::findOrFail($data->reservationId);
         if($reservation->user_id !== $user->id)
         {
             throw new AuthorizationException("You are not owner of this reservation");
@@ -24,6 +22,6 @@ class ReviewService
         {
              throw new ConflictHttpException(message: "Review already exists");
         }
-        return $user->reviews()->create($data);
+        return $user->reviews()->create($data->toArray());
     }
 }
