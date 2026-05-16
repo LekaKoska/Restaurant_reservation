@@ -12,7 +12,7 @@ class ExpiredReservations extends Command
 
     protected $description = 'This command checks all reservations with an expired date and changes their status to false.';
 
-    public function handle()
+    public function handle(): void
     {
         Reservation::where("end_date", "<=", Carbon::now())->update(["is_active" => false]);
     }
