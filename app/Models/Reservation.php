@@ -22,7 +22,7 @@ class Reservation extends Model
             "end_date" => "datetime"
                             ];
 
-        public function userReservations(): BelongsTo
+        public function user(): BelongsTo
         {
             return $this->belongsTo(User::class, "user_id", "id");
         }
