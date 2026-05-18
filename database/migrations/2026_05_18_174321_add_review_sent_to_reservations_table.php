@@ -10,7 +10,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table(table: Reservation::TABLE,callback:  function (Blueprint $table) {
-            $table->boolean(column: "review_sent")->default(value: false);
+            $table->boolean(column: "review_sent")->default(value: false)->after(column: "is_active");
         });
     }
 
