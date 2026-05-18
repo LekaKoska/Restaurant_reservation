@@ -14,7 +14,7 @@ class Reservation extends Model
     protected $fillable = [
         "table_id", "user_id", "guest_number",
         "start_date", "end_date", "special_request",
-        "is_active"
+        "is_active", "review_sent"
         ];
 
         protected $casts = [
