@@ -10,7 +10,7 @@ class ReservationObserver
 {
     public function created(Reservation $reservation): void
     {
-        Mail::to($reservation->userReservations->email)->send(new ReservationConfirmed($reservation));
+        Mail::to($reservation->user->email)->send(new ReservationConfirmed($reservation));
     }
 
     /**

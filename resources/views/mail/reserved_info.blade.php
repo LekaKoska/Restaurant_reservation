@@ -8,7 +8,7 @@
     Guest number: {{$reservation->guest_number}}
     Start: {{$reservation->start_date->format('d.m.Y H:i')}}
     End: {{$reservation->end_date->format('d.m.Y H:i')}}
-    Reserved by: {{$reservation->userReservations->name}}
+    Reserved by: {{$reservation->user->name}}
 
 
 
