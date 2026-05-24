@@ -19,41 +19,24 @@ class ReviewController extends Controller
     {
         $this->authorizeResource(model: Review::class, parameter: "review");
     }
-
     public function index()
     {
 
     }
-
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(ReviewRequest $request, ReviewService $reviewService)
     {
       $reviewDTO = CreateReviewDTO::fromRequest($request);
       $review = $reviewService->createReview(Auth::user(), $reviewDTO);
       return ResponseServices::successResponse(data: $review, message: "Successfully created Review");
     }
-
-    /**
-     * Display the specified resource.
-     */
     public function show(Review $review)
     {
         //
     }
-
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(Request $request, Review $review)
     {
         //
     }
-
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(Review $review)
     {
         //
