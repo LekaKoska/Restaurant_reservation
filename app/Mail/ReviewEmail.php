@@ -21,7 +21,7 @@ class ReviewEmail extends Mailable
     {
         for ($rating = 1; $rating <= 5; $rating++) {
             $this->ratingLinks[$rating] = URL::temporarySignedRoute(
-                name: 'review.store',
+                name: 'review-email.store',
                 expiration: now()->addDays(7),
                 parameters:[
                     'reservation_id' => $this->reservation->id,
