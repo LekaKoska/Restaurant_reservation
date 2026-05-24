@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Auth\VerifyEmailController;
+use App\Http\Controllers\EmailReviewController;
 use App\Http\Controllers\ReservationController;
 use App\Http\Controllers\ReviewController;
 use Illuminate\Http\Request;
@@ -31,7 +32,7 @@ Route::middleware(["auth:sanctum", "email_verify"])->group(function ()
     Route::get(uri: "/tables", action: [ReservationController::class, "info"]);
     Route::controller(ReservationController::class)->prefix(prefix: "reservation")->group(function () {
         Route::post(uri: "/", action: "store");
-        Route::get(uri: '/all/{user}', action: "reservationHistory")->name(name: "show.reservation");
+        Route::get(uri: '/all/{user}', action: "reservationHistory")->name(name: "history.reservation");
         Route::delete(uri: "delete/{reservation}", action: "delete")->name(name: "delete.reservation");
         Route::get(uri: "/show/{reservation}", action: "show")->name(name: "show.reservation");
         Route::patch(uri: "/update/{reservation}", action: "update")->name(name: "update.reservation");
@@ -39,4 +40,4 @@ Route::middleware(["auth:sanctum", "email_verify"])->group(function ()
     });
     Route::apiResource(name: "review", controller: ReviewController::class);
 });
-
+Route::get(uri: "/review-email", action: [EmailReviewController::class, "store"])->middleware("signed")->name("review-email.store");
