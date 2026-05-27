@@ -16,7 +16,7 @@ class ReservationReminder extends Mailable
 {
     use Queueable, SerializesModels;
 
-    public function __construct(Reservation $reservation)
+    public function __construct(public Reservation $reservation)
     {}
     public function envelope(): Envelope
     {
@@ -25,11 +25,10 @@ class ReservationReminder extends Mailable
             subject: 'Reservation Reminder',
         );
     }
-
     public function content(): Content
     {
         return new Content(
-            view: 'mail.reservation_reminder',
+            markdown: 'mail.reservation_reminder',
         );
     }
     public function attachments(): array
